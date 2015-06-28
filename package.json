@@ -1,0 +1,27 @@
+{
+  "name": "stylish-commit",
+  "version": "0.0.1",
+  "description": "Check commits conform to style before commiting with git.",
+  "preferGlobal": true,
+  "main": "index.js",
+  "bin": "bin/stylish-commit",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "keywords": [
+    "git",
+    "pre-commit",
+    "styleguide",
+    "stylecheck",
+    "lint",
+    "hint",
+    "jslint",
+    "jshint"
+  ],
+  "author": "andrew.mckenzie@electronifie.com",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "mocha": "^2.2.5"
+  }
+}
