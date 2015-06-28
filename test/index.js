@@ -1,9 +1,39 @@
 var assert = require('chai').assert;
+var TemporaryRepository = require('./_helpers').Repository;
+var Repository = require('../lib/git/Repository.js');
 
 describe('stylish-commit', function () {
   describe('git integration', function () {
+    var temporaryRepository = null;
+    beforeEach(function () { temporaryRepository = new TemporaryRepository(); });
+    afterEach(function () { temporaryRepository.delete(); });
+
     it('installs a git pre-commit hook');
-    it('only run scripts against staged commits');
+
+    it('only run scripts against staged commits', function () {
+      temporaryRepository.createFile('./foo.js', 'foo\nbar\nbing\nbop');
+      temporaryRepository.stageFile('./foo.js');
+      temporaryRepository.commit();
+
+      temporaryRepository.createFile('./bar.js', 'bar');
+      temporaryRepository.updateFile('./foo.js', 'foo1\nbar\nbing1\nbop');
+      temporaryRepository.stageFile('./foo.js');
+      temporaryRepository.updateFile('./foo.js', 'foo\nbar2\nbing1\nbop');
+
+      var repositoryRoot = temporaryRepository.getDirectory();
+      var repository = new Repository({
+        rootDirectory: repositoryRoot
+      });
+
+      assert.deepEqual(
+        repository.stagedChanges(),
+        [{
+          file: 'foo.js',
+          modifiedLines: [ { lineNumber: 1, text: 'foo1' }, { lineNumber: 3, text: 'bing1' } ]
+        }]
+      );
+    });
+
     it('lets you abort the commit if you ignore changes');
   });
 

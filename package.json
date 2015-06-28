@@ -22,6 +22,13 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.0.0",
+    "fs-extra": "^0.20.1",
     "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "colors.js": "^1.2.4",
+    "lodash": "^3.9.3",
+    "parse-diff": "0.0.15",
+    "sync-exec": "^0.5.0"
   }
 }
