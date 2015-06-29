@@ -1,0 +1,4 @@
+{
+  "name": "package-with-explicit-style-folder",
+  "styleScripts": "scripts/style"
+}

@@ -1,6 +1,8 @@
+var _ = require('lodash');
 var assert = require('chai').assert;
 var TemporaryRepository = require('./_helpers').Repository;
-var Repository = require('../lib/git/Repository.js');
+var Repository = require('../lib/Repository.js');
+var ScriptLoader = require('../lib/ScriptLoader.js');
 
 describe('stylish-commit', function () {
   describe('git integration', function () {
@@ -38,8 +40,19 @@ describe('stylish-commit', function () {
   });
 
   describe('finding script files', function () {
-    it('reads all scripts from the ".style" directory by default');
-    it('reads scripts from a custom directory when "styleScripts" is provided in package.json');
+    it('reads all scripts from the ".style" directory by default', function () {
+      var scriptLoader = new ScriptLoader(__dirname + '/fixtures/script-discovery-via-default/package.json');
+      var scripts = scriptLoader.getScripts();
+      var scriptNames = _.pluck(scripts, 'name');
+      assert.deepEqual(scriptNames, ['Style Script 1', 'Style Script 2']);
+    });
+
+    it('reads scripts from a custom directory when "styleScripts" is provided in package.json', function () {
+      var scriptLoader = new ScriptLoader(__dirname + '/fixtures/script-discovery-via-package/package.json');
+      var scripts = scriptLoader.getScripts();
+      var scriptNames = _.pluck(scripts, 'name');
+      assert.deepEqual(scriptNames, ['Style Script 3', 'Style Script 4']);
+    });
   });
 
   describe('validation', function () {

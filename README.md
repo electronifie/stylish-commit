@@ -24,7 +24,7 @@ Usage:
           validate: function (changedLines) {
             // Return lines the way they should look
             return changedLines.map(function (line) { return line.replace(/\s+$/); });
-          };
+          }
         };
 
  1. run `stylish-commit add-precommit` to run the scripts automatically before each commit
