@@ -1,10 +1,11 @@
 var _ = require('lodash');
 var assert = require('chai').assert;
 var log = require('debug')('stylish-commit.test');
+var Prompt = require('../lib/Prompt');
+var Repository = require('../lib/Repository');
+var ScriptLoader = require('../lib/ScriptLoader');
+var ScriptRunner = require('../lib/ScriptRunner');
 var TemporaryRepository = require('./_helpers').Repository;
-var Repository = require('../lib/Repository.js');
-var ScriptLoader = require('../lib/ScriptLoader.js');
-var ScriptRunner = require('../lib/ScriptRunner.js');
 
 describe('stylish-commit', function () {
   describe('git integration', function () {
@@ -14,7 +15,7 @@ describe('stylish-commit', function () {
 
     it('installs a git pre-commit hook');
 
-    it('only run scripts against staged commits', function () {
+    it('only runs scripts against staged commits', function () {
       temporaryRepository.createFile('./foo.js', 'foo\nbar\nbing\nbop');
       temporaryRepository.stageFile('./foo.js');
       temporaryRepository.commit();
@@ -38,7 +39,7 @@ describe('stylish-commit', function () {
       );
     });
 
-    it('lets you abort the commit if you ignore changes');
+    it('writes and stages the changes');
   });
 
   describe('finding script files', function () {
@@ -114,12 +115,68 @@ describe('stylish-commit', function () {
             { lineNumber: 4, text: ' bar    bar ', suggestions: [{ scriptName: 'trailingLineTrimmer', suggested: ' bar    bar' }] }
           ]
         }]
-      )
+      );
+    });
+  });
+
+  describe('interaction', function () {
+
+    it('does not prompt if there are no suggestions', function (done) {
+      var prompt = new Prompt([]);
+      prompt.start(function (actionMessage) {
+        assert.deepEqual(actionMessage.action, Prompt.Actions.IGNORE_CHANGES);
+        done();
+      });
     });
 
-    it('allows validate() to return null, indicating there are no changes to be made');
+    it('lets you abort the commit', function (done) {
+      var suggestions = [{
+        file: 'foo.js',
+        results: [{ lineNumber: 1, text: 'AA AA', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'AA BB AA' }] }]
+      }, {
+        file: 'bar.js',
+        results: [
+          { lineNumber: 1, text: 'BB', suggestions: [{ scriptName: 'TEST_SCRIPT_2', suggested: 'CC' }] },
+          { lineNumber: 1, text: 'DD', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'DDE' }] }
+        ]
+      }];
+
+      var expectedScript = [
+        {
+          message: 'Some suggested changes for your consideration:\n' +
+                   '  foo.js:\n' +
+                   '    - [TEST_SCRIPT_1] AA +BB +AA\n' +
+                   '  bar.js:\n' +
+                   '    - [TEST_SCRIPT_2] -BB-+CC+\n' +
+                   '    - [TEST_SCRIPT_1] -DD-+DDE+\n',
+          choices: ['abort', 'ignore'],
+          replyWith: 'abort'
+        }
+      ];
+
+      var prompt = new Prompt(suggestions);
+
+      prompt._ask = function (question, cb) {
+        var expected = expectedScript.pop();
+        assert.deepEqual(question.message, expected.message);
+        assert.deepEqual(question.choices, expected.choices);
+        cb(expected.replyWith);
+      };
+
+      prompt._formatDiff = function (diff) {
+        return _.reduce(diff, function (memo, change) {
+          var indicator = change.added ? '+' : change.removed ? '-' : '';
+          return memo + indicator + change.value + indicator;
+        }, '');
+      };
+
+      prompt.start(function (actionMessage) {
+        assert.deepEqual(actionMessage.action, Prompt.Actions.ABORT_COMMIT);
+        done();
+      });
+    });
     it('prompts whether to apply the suggested changes');
     it('lets you accept all changes, or iterate through individual changes');
-    it('writes changes to a file, and stages the changes');
+    it('only prompts to apply changes if they can be cleanly applied');
   });
 });

@@ -19,7 +19,6 @@
     "jshint"
   ],
   "author": "andrew.mckenzie@electronifie.com",
-  "license": "ISC",
   "devDependencies": {
     "chai": "^3.0.0",
     "fs-extra": "^0.20.1",
@@ -27,6 +26,9 @@
   },
   "dependencies": {
     "colors.js": "^1.2.4",
+    "diff": "^1.4.0",
+    "handlebars": "^3.0.3",
+    "inquirer": "^0.8.5",
     "lodash": "^3.9.3",
     "minimatch": "^2.0.8",
     "parse-diff": "0.0.15",
