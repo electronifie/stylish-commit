@@ -1,1 +1,3 @@
-module.exports.run = require('./lib/run');
+module.exports = {
+  run: require('./lib/run')
+};

@@ -1,3 +1,6 @@
+var colors = require('colors/safe');
+colors.enabled = false;
+
 var _ = require('lodash');
 var assert = require('chai').assert;
 var log = require('debug')('stylish-commit.test');
@@ -137,20 +140,18 @@ describe('stylish-commit', function () {
         file: 'bar.js',
         results: [
           { lineNumber: 1, text: 'BB', suggestions: [{ scriptName: 'TEST_SCRIPT_2', suggested: 'CC' }] },
-          { lineNumber: 1, text: 'DD', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'DDE' }] }
+          { lineNumber: 2, text: 'DD', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'DDE' }] }
         ]
       }];
 
       var expectedScript = [
         {
-          message: 'Some suggested changes for your consideration:\n' +
-                   '  foo.js:\n' +
-                   '    - [TEST_SCRIPT_1] AA +BB +AA\n' +
-                   '  bar.js:\n' +
-                   '    - [TEST_SCRIPT_2] -BB-+CC+\n' +
-                   '    - [TEST_SCRIPT_1] -DD-+DDE+\n',
-          choices: ['abort', 'ignore'],
-          replyWith: 'abort'
+          message: 'Recommended changes:\n' +
+                   '  - [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
+                   '  - [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
+                   '  - [TEST_SCRIPT_1] bar.js:2  -DD-+DDE+\n',
+          choices: ['ignore changes', 'abort commit'],
+          replyWith: 'abort commit'
         }
       ];
 
