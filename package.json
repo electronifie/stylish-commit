@@ -1,8 +1,9 @@
 {
   "name": "stylish-commit",
   "version": "0.0.1",
-  "description": "Check commits conform to style before commiting with git.",
+  "description": "Check staged changes with style scripts before commiting with git.",
   "preferGlobal": true,
+  "repository": "https://github.com/electronifie/stylish-commit",
   "main": "index.js",
   "bin": "bin/stylish-commit",
   "scripts": {
