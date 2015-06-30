@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-console.log('Checking commit');
-
 var stylishCommit;
 try {
   // Try loading from local modules
@@ -10,6 +8,7 @@ try {
   console.log('stylish-commit not found.');
   console.log('You should add it as a package dependency or run `npm install -g stylish-commit`');
   console.log('or you can get rid of this message by deleting .git/hooks/pre-commit');
+  return;
 }
 
 stylishCommit.run();
