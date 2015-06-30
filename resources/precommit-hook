@@ -1,14 +1,14 @@
-#!/usr/bin/env node
+#!/bin/sh
 
-var stylishCommit;
-try {
-  // Try loading from local modules
-  stylishCommit = require('stylish-commit');
-} catch (e) {
-  console.log('stylish-commit not found.');
-  console.log('You should add it as a package dependency or run `npm install -g stylish-commit`');
-  console.log('or you can get rid of this message by deleting .git/hooks/pre-commit');
-  return;
-}
-
-stylishCommit.run();
+if hash stylish-commit 2>/dev/null; then
+  stylish-commit
+else
+  # Attempt to run locally
+  if node -e "require('stylish-commit')" 2>/dev/null; then
+    node -e "require('stylish-commit').run()"
+  else
+    echo "!! stylish-commit not found."
+    echo "!! You should add it as a package dependency or run `npm install -g stylish-commit`"
+    echo "!! or you can get rid of this message by deleting .git/hooks/pre-commit"
+  fi
+fi
