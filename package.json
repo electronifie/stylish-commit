@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Check staged changes with style scripts before commiting with git.",
   "repository": "https://github.com/electronifie/stylish-commit",
+  "license": "ISC",
   "main": "index.js",
   "bin": "bin/stylish-commit",
   "scripts": {
