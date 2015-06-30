@@ -1,5 +1,9 @@
 #!/bin/sh
 
+##
+# stylish-commit precommit hook
+##
+
 if hash stylish-commit 2>/dev/null; then
   stylish-commit < /dev/tty
 else

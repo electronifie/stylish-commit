@@ -7,12 +7,15 @@ var parser = new ArgumentParser({
 });
 
 parser.addArgument([ '-i', '--install-hook'], { help: 'Install as a git pre-commit hook.', action: 'storeTrue' });
+parser.addArgument([ '-u', '--uninstall-hook'], { help: 'Removes the git pre-commit hook.', action: 'storeTrue' });
 
 var args = parser.parseArgs();
 var stylishCommit = require('../index');
 
 if (args.install_hook) {
   stylishCommit.installHook();
+} else if (args.uninstall_hook) {
+  stylishCommit.uninstallHook();
 } else {
   stylishCommit.run();
 }

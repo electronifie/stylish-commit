@@ -7,7 +7,9 @@
   "main": "index.js",
   "bin": "bin/stylish-commit",
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha test",
+    "postinstall": "./bin/stylish-commit --install-hook",
+    "uninstall": "./bin/stylish-commit --uninstall-hook"
   },
   "keywords": [
     "git",
