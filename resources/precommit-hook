@@ -1,11 +1,11 @@
 #!/bin/sh
 
 if hash stylish-commit 2>/dev/null; then
-  stylish-commit
+  stylish-commit < /dev/tty
 else
   # Attempt to run locally
   if node -e "require('stylish-commit')" 2>/dev/null; then
-    node -e "require('stylish-commit').run()"
+    node -e "require('stylish-commit').run()" < /dev/tty
   else
     echo "!! stylish-commit not found."
     echo "!! You should add it as a package dependency or run `npm install -g stylish-commit`"
