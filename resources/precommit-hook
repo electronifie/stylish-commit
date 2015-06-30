@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+
+console.log('Checking commit');
+
 var stylishCommit;
 try {
   // Try loading from local modules
