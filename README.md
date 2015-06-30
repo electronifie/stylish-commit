@@ -27,7 +27,7 @@ Usage:
           }
         };
 
- 1. run `stylish-commit install-precommit` to run the scripts automatically before each commit
+ 1. run `stylish-commit --install-hook` to install in the current repo as a pre-commit check
 
     or
 
