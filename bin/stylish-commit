@@ -1,3 +1,18 @@
 #!/usr/bin/env node
 
-require('../index').run();
+var ArgumentParser = require('argparse').ArgumentParser;
+var parser = new ArgumentParser({
+  addHelp: true,
+  description: 'Staged commit verifier.'
+});
+
+parser.addArgument([ '-i', '--install-hook'], { help: 'Install as a git pre-commit hook.', action: 'storeTrue' });
+
+var args = parser.parseArgs();
+var stylishCommit = require('../index');
+
+if (args.install_hook) {
+  stylishCommit.installHook();
+} else {
+  stylishCommit.run();
+}

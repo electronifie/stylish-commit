@@ -1,3 +1,4 @@
 module.exports = {
-  run: require('./lib/run')
+  run: require('./lib/run'),
+  installHook: require('./lib/installHook')
 };
