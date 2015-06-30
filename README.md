@@ -27,8 +27,7 @@ Usage:
           }
         };
 
- 1. run `stylish-commit --install-hook` to install in the current repo as a pre-commit check
+ 1. run `npm install stylish-commit --save-dev` to add the dependency and install the pre-commit hook
 
-    or
-
-    run `stylish-commit` to run on the current staged changes
+Sample scripts:
+ - https://github.com/electronifie/style-guide
