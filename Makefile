@@ -4,4 +4,7 @@ run:
 test:
 	npm test
 
+install-precommit:
+	./bin/stylish-commit install-precommit
+
 .PHONY: test
