@@ -149,7 +149,7 @@ describe('stylish-commit', function () {
           message: 'Recommended changes:\n' +
                    '  - [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
                    '  - [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
-                   '  - [TEST_SCRIPT_1] bar.js:2  -DD-+DDE+\n',
+                   '  - [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
           choices: ['ignore changes', 'abort commit'],
           replyWith: 'abort commit'
         }
