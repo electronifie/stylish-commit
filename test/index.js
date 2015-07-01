@@ -70,7 +70,42 @@ describe('stylish-commit', function () {
       );
     });
 
-    it('writes and stages the changes');
+    it('writes and stages the changes', function () {
+      temporaryRepository.createFile('./foo.js', '1\n2\n3\n4');
+      temporaryRepository.stageFile('./foo.js');
+      temporaryRepository.commit();
+
+      temporaryRepository.updateFile('./foo.js', '1\n2 X \n3\n4x');
+      temporaryRepository.stageFile('./foo.js');
+      temporaryRepository.createFile('./bar.js', '  A\n\nC\n');
+      temporaryRepository.stageFile('./bar.js');
+
+      var repositoryRoot = temporaryRepository.getDirectory();
+      var repository = new Repository({
+        rootDirectory: repositoryRoot
+      });
+
+      repository.applySuggestions([
+        { file: './foo.js', lineNumber: 2, oldText: '2 X ', newText: '2 x' },
+        { file: './foo.js', lineNumber: 4, oldText: '4x', newText: '4' },
+        { file: './bar.js', lineNumber: 3, oldText: 'C', newText: 'CX' }
+      ]);
+
+      assert.deepEqual(
+        repository.stagedChanges(),
+        [ {
+          file: 'bar.js',
+          modifiedLines: [
+            { lineNumber: 1, text: '  A' },
+            { lineNumber: 2, text: '' },
+            { lineNumber: 3, text: 'CX' }
+          ]
+        }, {
+          file: 'foo.js',
+          modifiedLines: [ { lineNumber: 2, text: '2 x' } ]
+        }]
+      );
+    });
   });
 
   describe('finding script files', function () {
