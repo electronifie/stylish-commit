@@ -65,6 +65,7 @@ describe('stylish-commit', function () {
         repository.stagedChanges(),
         [{
           file: 'foo.js',
+          canBeApplied: false,
           modifiedLines: [ { lineNumber: 1, text: 'foo1' }, { lineNumber: 3, text: 'bing1' } ]
         }]
       );
@@ -95,6 +96,7 @@ describe('stylish-commit', function () {
         repository.stagedChanges(),
         [ {
           file: 'bar.js',
+          canBeApplied: true,
           modifiedLines: [
             { lineNumber: 1, text: '  A' },
             { lineNumber: 2, text: '' },
@@ -102,7 +104,34 @@ describe('stylish-commit', function () {
           ]
         }, {
           file: 'foo.js',
+          canBeApplied: true,
           modifiedLines: [ { lineNumber: 2, text: '2 x' } ]
+        }]
+      );
+    });
+
+    it('does not allow changes to be applide if there is a staged file that also has unstaged changes', function () {
+      temporaryRepository.createFile('./foo.js', 'foo\nbar');
+      temporaryRepository.stageFile('./foo.js');
+      temporaryRepository.createFile('./bar.js', 'foo');
+      temporaryRepository.stageFile('./bar.js');
+      temporaryRepository.updateFile('./foo.js', 'foo1\nbar');
+
+      var repositoryRoot = temporaryRepository.getDirectory();
+      var repository = new Repository({
+        rootDirectory: repositoryRoot
+      });
+
+      assert.deepEqual(
+        repository.stagedChanges(),
+        [{
+          file: 'bar.js',
+          canBeApplied: true,
+          modifiedLines: [ { lineNumber: 1, text: 'foo' } ]
+        }, {
+          file: 'foo.js',
+          canBeApplied: false,
+          modifiedLines: [ { lineNumber: 1, text: 'foo' }, { lineNumber: 2, text: 'bar' } ]
         }]
       );
     });
@@ -161,9 +190,9 @@ describe('stylish-commit', function () {
       }];
 
       var diff = [
-        { file: 'foo.js', modifiedLines: [{ lineNumber: 1, text: '  foo   ' }] },
-        { file: 'bar.js', modifiedLines: [{ lineNumber: 2, text: 'bar' }, { lineNumber: 3, text: 'bar     ' }, { lineNumber: 4, text: ' bar    bar ' }] },
-        { file: 'bop.js', modifiedLines: [{ lineNumber: 4, text: 'bop' }] }
+        { file: 'foo.js', canBeApplied: true, modifiedLines: [{ lineNumber: 1, text: '  foo   ' }] },
+        { file: 'bar.js', canBeApplied: false, modifiedLines: [{ lineNumber: 2, text: 'bar' }, { lineNumber: 3, text: 'bar     ' }, { lineNumber: 4, text: ' bar    bar ' }] },
+        { file: 'bop.js', canBeApplied: false, modifiedLines: [{ lineNumber: 4, text: 'bop' }] }
       ];
 
       var scriptRunner = new ScriptRunner(scripts);
@@ -173,9 +202,11 @@ describe('stylish-commit', function () {
         result,
         [{
           file: 'foo.js',
+          canBeApplied: true,
           results: [{ lineNumber: 1, text: '  foo   ', suggestions: [{ scriptName: 'trailingLineTrimmer', suggested: '  foo'}] }]
         }, {
           file: 'bar.js',
+          canBeApplied: false,
           results: [
             { lineNumber: 3, text: 'bar     ',     suggestions: [{ scriptName: 'trailingLineTrimmer', suggested: 'bar' }] },
             { lineNumber: 4, text: ' bar    bar ', suggestions: [{ scriptName: 'trailingLineTrimmer', suggested: ' bar    bar' }] }
@@ -210,7 +241,7 @@ describe('stylish-commit', function () {
 
       var expectedScript = [
         {
-          message: 'Recommended changes:\n' +
+          message: 'Recommended changes (can not be automatically applied):\n' +
                    '  - [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
                    '  - [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
                    '  - [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
@@ -243,6 +274,5 @@ describe('stylish-commit', function () {
 
     it('prompts whether to apply the suggested changes');
     it('lets you accept all changes, or iterate through individual changes');
-    it('only prompts to apply changes if they can be cleanly applied');
   });
 });
