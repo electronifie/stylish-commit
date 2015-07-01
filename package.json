@@ -2,8 +2,8 @@
   "name": "stylish-commit",
   "version": "0.0.1",
   "description": "Check staged changes with style scripts before commiting with git.",
-  "preferGlobal": true,
   "repository": "https://github.com/electronifie/stylish-commit",
+  "license": "ISC",
   "main": "index.js",
   "bin": "bin/stylish-commit",
   "scripts": {
@@ -21,7 +21,6 @@
     "jslint",
     "jshint"
   ],
-  "author": "andrew.mckenzie@electronifie.com",
   "devDependencies": {
     "chai": "^3.0.0",
     "fs-extra": "^0.20.1",
