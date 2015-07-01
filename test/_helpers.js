@@ -18,6 +18,8 @@ Repository.prototype = {
     log('Writing to "' + fileName + '": ' + fileContents);
     fs.writeFileSync(this._path(fileName), fileContents);
   },
+  getFileContents: function (fileName) { return fs.readFileSync(this._path(fileName), { encoding: 'utf8' }); },
+  containsFile: function (fileName) { return fs.existsSync(this._path(fileName)); },
 
   // Git actions
   commit: function (commitMessage) { this._run('git commit -m "' + (commitMessage || 'committing') + '"'); },

@@ -16,7 +16,19 @@ describe('stylish-commit', function () {
     beforeEach(function () { temporaryRepository = new TemporaryRepository(); });
     afterEach(function () { temporaryRepository.delete(); });
 
-    it('installs a git pre-commit hook');
+    it('installs and removes a git pre-commit hook', function () {
+      var repositoryRoot = temporaryRepository.getDirectory();
+      var repository = new Repository({
+        rootDirectory: repositoryRoot
+      });
+
+      repository.installPrecommitHook();
+      var precommitFileContents = temporaryRepository.getFileContents('.git/hooks/pre-commit');
+      assert.include(precommitFileContents, 'stylish-commit precommit hook');
+
+      repository.uninstallPrecommitHook();
+      assert.notOk(temporaryRepository.containsFile('.git/hooks/pre-commit'));
+    });
 
     it('only runs scripts against staged commits', function () {
       temporaryRepository.createFile('./foo.js', 'foo\nbar\nbing\nbop');
@@ -176,6 +188,7 @@ describe('stylish-commit', function () {
         done();
       });
     });
+
     it('prompts whether to apply the suggested changes');
     it('lets you accept all changes, or iterate through individual changes');
     it('only prompts to apply changes if they can be cleanly applied');
