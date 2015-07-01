@@ -226,13 +226,14 @@ describe('stylish-commit', function () {
       });
     });
 
-    it('lets you abort the commit', function (done) {
+    it('lets you cancel the commit', function (done) {
       var suggestions = [{
         file: 'foo.js',
         canBeApplied: false,
         results: [{ lineNumber: 1, text: 'AA AA', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'AA BB AA' }] }]
       }, {
         file: 'bar.js',
+        canBeApplied: true,
         results: [
           { lineNumber: 1, text: 'BB', suggestions: [{ scriptName: 'TEST_SCRIPT_2', suggested: 'CC' }] },
           { lineNumber: 2, text: 'DD', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'DDE' }] }
@@ -245,8 +246,8 @@ describe('stylish-commit', function () {
                    '  - [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
                    '  - [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
                    '  - [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
-          choices: ['ignore changes', 'abort commit'],
-          replyWith: 'abort commit'
+          choices: ['ignore changes', 'cancel commit'],
+          replyWith: 'cancel commit'
         }
       ];
 
@@ -272,7 +273,69 @@ describe('stylish-commit', function () {
       });
     });
 
-    it('prompts whether to apply the suggested changes');
-    it('lets you accept all changes, or iterate through individual changes');
+    it('prompts whether to apply the suggested changes', function (done) {
+      var suggestions = [{
+        file: 'foo.js',
+        canBeApplied: true,
+        results: [{ lineNumber: 1, text: 'AA AA', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'AA BB AA' }] }]
+      }, {
+        file: 'bar.js',
+        canBeApplied: true,
+        results: [
+          { lineNumber: 1, text: 'BB', suggestions: [{ scriptName: 'TEST_SCRIPT_2', suggested: 'CC' }] },
+          { lineNumber: 2, text: 'DD', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'DDE' }] }
+        ]
+      }];
+
+      var expectedScript = [
+        {
+          message: 'Recommended changes (can be automatically applied):\n' +
+          '  - [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
+          '  - [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
+          '  - [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
+          choices: ['ignore changes', 'apply changes', 'cancel commit'],
+          replyWith: 'apply changes'
+        },
+        {
+          message: 'Applying suggestions is an experimental feature. It is ' +
+          'highly recommended you check the changes before committing them.\n' +
+          '\n' +
+          'How do you wish to proceed?',
+          choices: ['apply changes and cancel commit', 'apply changes and commit', 'ignore changes', 'abort commit'],
+          replyWith: 'apply changes and cancel commit'
+        }
+      ].reverse();
+
+      var prompt = new Prompt(suggestions);
+
+      prompt._ask = function (question, cb) {
+        var expected = expectedScript.pop();
+        assert.deepEqual(question.message, expected.message);
+        assert.deepEqual(question.choices, expected.choices);
+        cb(expected.replyWith);
+      };
+
+      prompt._formatDiff = function (diff) {
+        return _.reduce(diff, function (memo, change) {
+          var indicator = change.added ? '+' : change.removed ? '-' : '';
+          return memo + indicator + change.value + indicator;
+        }, '');
+      };
+
+      prompt.start(function (actionMessage) {
+        assert.deepEqual(actionMessage.action, Prompt.Actions.APPLY_CHANGES);
+        assert.deepEqual(actionMessage.payload, {
+          abortCommit: true,
+          suggestions: [
+            { file: 'foo.js', lineNumber: 1, newText: "AA BB AA", oldText: 'AA AA' },
+            { file: 'bar.js', lineNumber: 1, newText: "CC", oldText: 'BB' },
+            { file: 'bar.js', lineNumber: 2, newText: "DDE", oldText: 'DD' }
+          ]
+        });
+        done();
+      });
+    });
+
+    it('lets you select which changes to apply');
   });
 });
