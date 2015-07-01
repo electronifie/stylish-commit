@@ -4,6 +4,12 @@
 # stylish-commit precommit hook
 ##
 
+if [ -t 1 ]; then
+  # TODO: still run stylish-commit, but skip prompts and just log issues to console
+  echo "Skipping style check (no TTY present)."
+  exit 0
+fi
+
 if hash stylish-commit 2>/dev/null; then
   stylish-commit < /dev/tty
 else
