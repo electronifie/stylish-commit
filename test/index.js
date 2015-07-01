@@ -301,7 +301,7 @@ describe('stylish-commit', function () {
           'highly recommended you check the changes before committing them.\n' +
           '\n' +
           'How do you wish to proceed?',
-          choices: ['apply changes and cancel commit', 'apply changes and commit', 'ignore changes', 'abort commit'],
+          choices: ['apply changes and cancel commit', 'apply changes and commit', 'ignore changes', 'cancel commit'],
           replyWith: 'apply changes and cancel commit'
         }
       ].reverse();
