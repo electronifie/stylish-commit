@@ -198,6 +198,7 @@ describe('stylish-commit', function () {
     it('lets you abort the commit', function (done) {
       var suggestions = [{
         file: 'foo.js',
+        canApply: false,
         results: [{ lineNumber: 1, text: 'AA AA', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'AA BB AA' }] }]
       }, {
         file: 'bar.js',
