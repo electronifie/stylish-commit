@@ -2,19 +2,7 @@ stylish-commit
 ==============
 
 Usage:
- 1. create a folder in your project for validation scripts (calling it `.style` saves you a step)
-
- 1. add a field to package.json called "styleScripts" pointing at the folder (no need to do this if you called it `.style`)
-
-        package.json:
-        {
-          "name": "Foo barrer",
-          "version": "0.0.1",
-          ...
-          "styleScripts": "./scripts/style"
-        }
-
- 1. fill it with scripts that look like:
+ 1. create a folder called `.style` in your repo root and fill it with scripts that look like:
 
         .style/trailingWhitespace.js:
         module.exports = {
@@ -27,7 +15,25 @@ Usage:
           }
         };
 
- 1. run `npm install stylish-commit --save-dev` to add the dependency and install the pre-commit hook
+ 1. run `npm install stylish-commit -g` to install stylish-commit globally, then run `stylish-commit --install-hook` to
+    install the hook
 
-Sample scripts:
+    or
+
+    run `npm install stylish-commit-auto-hook-install --save-dev` to automatically install the hook every time
+    your project's dependencies are installed
+
+**Don't like .style?**
+
+Add a field to package.json called "styleScripts" pointing at whatever folder you desire.
+
+    package.json:
+    {
+      "name": "Foo project",
+      "version": "0.0.1",
+      ...
+      "styleScripts": "./scripts/style"
+    }
+
+**Sample scripts**
  - https://github.com/electronifie/style-guide
