@@ -4,9 +4,10 @@ stylish-commit is a command-line tool and git pre-commit hook that checks your c
 written in javascript.
 
 Use it for simple tasks like:
- - converting tabs to spaces
+ - converting tab indents to spaces
  - [removing trailing whitespace](https://github.com/electronifie/style-guide/blob/master/no-trailing-spaces.js)
- - [detecting usage of `debugger` and `console.log`](https://github.com/electronifie/style-guide/blob/master/no-debugger.js)
+ - detecting usage of [`debugger`](https://github.com/electronifie/style-guide/blob/master/no-debugger.js) and
+   [`console.log`](https://github.com/electronifie/style-guide/blob/master/no-console.js)
 
 Installation
 ------------
