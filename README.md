@@ -13,8 +13,9 @@ Installation
 ------------
 
 For node/iojs projects, The hook can be installed automatically by running `npm install stylish-commit-auto-hook-install --save-dev` 
-in your project's root folder. This will add `stylish-commit-auto-hook-install` to your project's dev-dependencies and
-automatically install the hook whenever someone installs dependencies with `npm install`.
+in your project's root folder. This will add [`stylish-commit-auto-hook-install`](https://github.com/electronifie/stylish-commit-auto-hook-install) 
+to your project's dev-dependencies and automatically install the hook whenever someone installs 
+dependencies with `npm install`.
 
 You can also install the hook manually by running `npm install stylish-commit -g` then `stylish-commit --install-hook`. If
 you take this route, you'll need to manually install the hook for each clone of the project.
@@ -44,7 +45,7 @@ When you commit some code, the scripts will be run against all staged changes. I
 lines you will be prompted to change them, like:
 ![prompt with changes](http://f.cl.ly/items/1R303o1t1R2j3r2g0m0L/2015-07-07%20at%2010.55%20PM.png)
 
-Here, you have the option to:
+Here you have the option to:
  - **ignore the changes** - proceeds with the commit.
  - **apply the changes** - updates files with the recommended changes. This option takes you to 
    [another menu](http://f.cl.ly/items/373x3U3A2s1s090j0V0v/2015-07-07%20at%2010.56%20PM.png) with the 
