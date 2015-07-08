@@ -12,13 +12,13 @@ Use it for simple tasks like:
 Installation
 ------------
 
-For node/iojs projects, The hook can be installed automatically by running `npm install stylish-commit-auto-hook-install --save-dev` 
-in your project's root folder. This will add [`stylish-commit-auto-hook-install`](https://github.com/electronifie/stylish-commit-auto-hook-install) 
-to your project's dev-dependencies and automatically install the hook whenever someone installs 
+For node/iojs projects, run `npm install stylish-commit-auto-hook-install --save-dev` in your project's root folder. This adds
+[`stylish-commit-auto-hook-install`](https://github.com/electronifie/stylish-commit-auto-hook-install)
+to your project's dev-dependencies and will automatically install the git hook whenever someone installs 
 dependencies with `npm install`.
 
 You can also install the hook manually by running `npm install stylish-commit -g` then `stylish-commit --install-hook`. If
-you take this route, you'll need to manually install the hook for each clone of the project.
+you take this route you'll need to manually install the hook for each clone of the project.
 
 Checking changes
 ----------------
