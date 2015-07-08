@@ -56,4 +56,4 @@ Here you have the option to:
 There are some scripts to get you started at https://github.com/electronifie/style-guide.
 
 <hr>
-<sup id="alternative-dir">**1**</sup> or in a custom directory provided by `styleScripts` in `package.json`.
+<sup id="alternative-dir">**1**</sup> *you can use a custom directory for your style scripts by adding a `styleScripts` property to your project's `package.json` with a path relative to the project's root.*
