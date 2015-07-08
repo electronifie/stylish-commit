@@ -1,4 +1,4 @@
-stylish-commit
+stylish-commit [![Build Status](https://travis-ci.org/electronifie/stylish-commit.svg)](https://travis-ci.org/electronifie/stylish-commit)
 ==============
 stylish-commit is a command-line tool and git pre-commit hook that checks your changes using simple lint scripts 
 written in javascript.
