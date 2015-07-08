@@ -22,15 +22,15 @@ Checking changes
 ----------------
 
 Style scripts sit in your project's `.style` directory<sup>[1](#alternative-dir)</sup>, and look like:
-
-    module.exports = {
-      name: 'no-trailing-spaces',
-      appliesTo: '**/*.+(js|txt)',
-      validate: function (lines) {
-        return lines.map(function (line) { return line.replace(/\s+$/, ''); });
-      }
-    };
-
+```javascript
+module.exports = {
+  name: 'no-trailing-spaces',
+  appliesTo: '**/*.+(js|txt)',
+  validate: function (lines) {
+    return lines.map(function (line) { return line.replace(/\s+$/, ''); });
+  }
+};
+```
 Each style script must have a `name` field and a `validate` function. It can also provide an `appliesTo`
 [minimatch glob](https://github.com/isaacs/minimatch) that restricts which modified files it checks.
 
