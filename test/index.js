@@ -138,7 +138,7 @@ describe('stylish-commit', function () {
     });
   });
 
-  describe('validation', function () {
+  describe('running scripts', function () {
     it('only calls a script\'s validate() method if the filename matches the "appliesTo" field', function () {
       var jsScriptCalled = 0;
       var mdScriptCalled = 0;
@@ -175,7 +175,7 @@ describe('stylish-commit', function () {
       }];
 
       var diff = [
-        { file: 'foo.js', canBeApplied: true, modifiedLines: [{ lineNumber: 1, text: '  foo   ' }] },
+        { file: 'foo.js', canBeApplied: true,  modifiedLines: [{ lineNumber: 1, text: '  foo   ' }] },
         { file: 'bar.js', canBeApplied: false, modifiedLines: [{ lineNumber: 2, text: 'bar' }, { lineNumber: 3, text: 'bar     ' }, { lineNumber: 4, text: ' bar    bar ' }] },
         { file: 'bop.js', canBeApplied: false, modifiedLines: [{ lineNumber: 4, text: 'bop' }] }
       ];
@@ -195,6 +195,39 @@ describe('stylish-commit', function () {
           results: [
             { lineNumber: 3, text: 'bar     ',     suggestions: [{ scriptName: 'trailingLineTrimmer', suggested: 'bar' }] },
             { lineNumber: 4, text: ' bar    bar ', suggestions: [{ scriptName: 'trailingLineTrimmer', suggested: ' bar    bar' }] }
+          ]
+        }]
+      );
+    });
+
+    it('allows shorthand search + replace script by providing an object for validate with search/replace properties', function () {
+      var scripts = [
+        { name: 'numberReplacer',                       validate: { replace: /\d/g,            with: '#' } },
+        { name: 'whitespaceTrimmer', appliesTo: '*.js', validate: { replace: /^\s*(.*\S)\s*$/, with: '$1' } }
+      ];
+
+      var diff = [
+        { file: 'foo.js', canBeApplied: true, modifiedLines: [{ lineNumber: 3, text: '    f0o   ' }, { lineNumber: 4, text: 'abcd42efg' }] },
+        { file: 'foo.md', canBeApplied: true, modifiedLines: [{ lineNumber: 3, text: '    foo   ' }, { lineNumber: 4, text: 'a1b2c3d4e5f6g' }] }
+      ];
+
+      var scriptRunner = new ScriptRunner(scripts);
+      var result = scriptRunner.run(diff);
+
+      assert.deepEqual(
+        result,
+        [{
+          file: 'foo.js',
+          canBeApplied: true,
+          results: [
+            { lineNumber: 3, text: '    f0o   ', suggestions: [{ scriptName: 'numberReplacer', suggested: '    f#o   ' }, { scriptName: 'whitespaceTrimmer', suggested: 'f0o' }] },
+            { lineNumber: 4, text: 'abcd42efg',  suggestions: [{ scriptName: 'numberReplacer', suggested: 'abcd##efg' }] }
+          ]
+        }, {
+          file: 'foo.md',
+          canBeApplied: true,
+          results: [
+            { lineNumber: 4, text: 'a1b2c3d4e5f6g',  suggestions: [{ scriptName: 'numberReplacer', suggested: 'a#b#c#d#e#f#g' }] }
           ]
         }]
       );
