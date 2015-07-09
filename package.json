@@ -1,6 +1,6 @@
 {
   "name": "stylish-commit",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Check staged changes with style scripts before commiting with git.",
   "repository": "https://github.com/electronifie/stylish-commit",
   "license": "ISC",

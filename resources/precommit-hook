@@ -10,15 +10,16 @@ if [ ! -t 1 ]; then
   exit 0
 fi
 
-if hash stylish-commit 2>/dev/null; then
+if node -e "require('stylish-commit')" 2>/dev/null; then
+  node -e "require('stylish-commit').run()" < /dev/tty
+elif node -e "require('stylish-commit-auto-hook-install')" 2>/dev/null; then
+  node -e "require('stylish-commit-auto-hook-install').stylishCommit.run()" < /dev/tty
+elif hash stylish-commit 2>/dev/null; then
   stylish-commit < /dev/tty
 else
   # Attempt to run locally
-  if node -e "require('stylish-commit')" 2>/dev/null; then
-    node -e "require('stylish-commit').run()" < /dev/tty
-  else
     echo "!! stylish-commit not found."
-    echo "!! You should add it as a package dependency or run `npm install -g stylish-commit`"
+    echo "!! You should add it as a package dependency or run 'npm install -g stylish-commit'"
     echo "!! or you can get rid of this message by deleting .git/hooks/pre-commit"
   fi
 fi
