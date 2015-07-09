@@ -76,4 +76,4 @@ module.exports = {
    last script to run's changes will be applied.
 
 <hr>
-<sup id="alternative-dir">**1**</sup> or in a custom directory provided by `styleScripts` in `package.json`.
+<sup id="alternative-dir">**1**</sup> *you can use a custom directory for your style scripts by adding a `styleScripts` property to your project's `package.json` with a path relative to the project's root.*
