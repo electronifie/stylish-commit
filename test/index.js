@@ -127,7 +127,7 @@ describe('stylish-commit', function () {
       var scriptLoader = new ScriptLoader(__dirname + '/fixtures/script-discovery-via-default/package.json');
       var scripts = scriptLoader.getScripts();
       var scriptNames = _.pluck(scripts, 'name');
-      assert.deepEqual(scriptNames, ['Style Script 1', 'Style Script 2']);
+      assert.deepEqual(scriptNames, ['Style Script 1', 'Style Script 2', 'Style Script 3']);
     });
 
     it('reads scripts from a custom directory when "styleScripts" is provided in package.json', function () {
