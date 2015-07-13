@@ -260,12 +260,12 @@ describe('stylish-commit', function () {
 
       var expectedScript = [
         {
-          message: 'Recommended changes (can not be automatically applied):\n' +
-                   '  - [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
-                   '  - [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
-                   '  - [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
-          choices: ['ignore changes', 'cancel commit'],
-          replyWith: 'cancel commit'
+          message: 'Suggested changes (can not be automatically applied):\n' +
+                   '   [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
+                   '   [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
+                   '   [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
+          choices: ['continue (ignores suggestions)', 'cancel'],
+          replyWith: 'cancel'
         }
       ];
 
@@ -307,20 +307,30 @@ describe('stylish-commit', function () {
 
       var expectedScript = [
         {
-          message: 'Recommended changes (can be automatically applied):\n' +
-          '  - [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
-          '  - [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
-          '  - [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
-          choices: ['ignore changes', 'apply changes', 'cancel commit'],
-          replyWith: 'apply changes'
+          message: 'Suggested changes (can be automatically applied):\n' +
+          '  ◉ [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
+          '  ◉ [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
+          '  ◉ [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
+          choices: ['continue (ignores suggestions)', 'apply 3 suggestions', 'select suggestions to apply', 'cancel'],
+          replyWith: 'apply 3 suggestions'
         },
         {
-          message: 'Applying suggestions is an experimental feature. It is ' +
+          message: 'Suggested changes (can be automatically applied):\n' +
+          '  ◉ [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
+          '  ◉ [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
+          '  ◉ [TEST_SCRIPT_1] bar.js:2  DD+E+\n' +
+          '\n' +
+          'Applying suggestions is an experimental feature. It is ' +
           'highly recommended you check the changes before committing them.\n' +
           '\n' +
           'How do you wish to proceed?',
-          choices: ['apply changes and cancel commit', 'apply changes and commit', 'ignore changes', 'cancel commit'],
-          replyWith: 'apply changes and cancel commit'
+          choices: [
+            'apply 3 suggestions and cancel commit',
+            'apply 3 suggestions and commit',
+            'commit only (ignores suggestions)',
+            'cancel'
+          ],
+          replyWith: 'apply 3 suggestions and cancel commit'
         }
       ].reverse();
 
@@ -354,6 +364,110 @@ describe('stylish-commit', function () {
       });
     });
 
-    it('lets you select which changes to apply');
+    it('lets you select which changes to apply', function (done) {
+      var suggestions = [{
+        file: 'foo.js',
+        canBeApplied: true,
+        results: [{ lineNumber: 1, text: 'AA AA', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'AA BB AA' }] }]
+      }, {
+        file: 'bar.js',
+        canBeApplied: true,
+        results: [
+          { lineNumber: 1, text: 'BB', suggestions: [{ scriptName: 'TEST_SCRIPT_2', suggested: 'CC' }] },
+          { lineNumber: 2, text: 'DD', suggestions: [{ scriptName: 'TEST_SCRIPT_1', suggested: 'DDE' }] }
+        ]
+      }];
+
+      var expectedScript = [
+        {
+          message: 'Suggested changes (can be automatically applied):\n' +
+          '  ◉ [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
+          '  ◉ [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
+          '  ◉ [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
+          choices: ['continue (ignores suggestions)', 'apply 3 suggestions', 'select suggestions to apply', 'cancel'],
+          replyWith: 'select suggestions to apply'
+        },
+        {
+          message: 'Select suggestions to apply (space to toggle, enter to go back):',
+          choices: [
+            { checked: true, name: ' [TEST_SCRIPT_1] foo.js:1  AA +BB +AA', value: 0 },
+            { checked: true, name: ' [TEST_SCRIPT_2] bar.js:1  -BB-+CC+',   value: 1 },
+            { checked: true, name: ' [TEST_SCRIPT_1] bar.js:2  DD+E+',      value: 2 }
+          ],
+          replyWith: [1]
+        },
+        {
+          message: 'Suggested changes (can be automatically applied):\n' +
+          '  ◯ [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
+          '  ◉ [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
+          '  ◯ [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
+          choices: ['continue (ignores suggestions)', 'apply 1 suggestion', 'select suggestions to apply', 'cancel'],
+          replyWith: 'select suggestions to apply'
+        },
+        {
+          message: 'Select suggestions to apply (space to toggle, enter to go back):',
+          choices: [
+            { checked: false, name: ' [TEST_SCRIPT_1] foo.js:1  AA +BB +AA', value: 0 },
+            { checked: true,  name: ' [TEST_SCRIPT_2] bar.js:1  -BB-+CC+',   value: 1 },
+            { checked: false, name: ' [TEST_SCRIPT_1] bar.js:2  DD+E+',      value: 2 }
+          ],
+          replyWith: [0, 2]
+        },
+        {
+          message: 'Suggested changes (can be automatically applied):\n' +
+          '  ◉ [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
+          '  ◯ [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
+          '  ◉ [TEST_SCRIPT_1] bar.js:2  DD+E+\n',
+          choices: ['continue (ignores suggestions)', 'apply 2 suggestions', 'select suggestions to apply', 'cancel'],
+          replyWith: 'apply 2 suggestions'
+        },
+        {
+          message: 'Suggested changes (can be automatically applied):\n' +
+          '  ◉ [TEST_SCRIPT_1] foo.js:1  AA +BB +AA\n' +
+          '  ◯ [TEST_SCRIPT_2] bar.js:1  -BB-+CC+\n' +
+          '  ◉ [TEST_SCRIPT_1] bar.js:2  DD+E+\n' +
+          '\n' +
+          'Applying suggestions is an experimental feature. It is ' +
+          'highly recommended you check the changes before committing them.\n' +
+          '\n' +
+          'How do you wish to proceed?',
+          choices: [
+            'apply 2 suggestions and cancel commit',
+            'apply 2 suggestions and commit',
+            'commit only (ignores suggestions)',
+            'cancel'
+          ],
+          replyWith: 'apply 2 suggestions and cancel commit'
+        }
+      ].reverse();
+
+      var prompt = new Prompt(suggestions);
+
+      prompt._ask = function (question, cb) {
+        var expected = expectedScript.pop();
+        assert.deepEqual(question.message, expected.message);
+        assert.deepEqual(question.choices, expected.choices);
+        cb(expected.replyWith);
+      };
+
+      prompt._formatDiff = function (diff) {
+        return _.reduce(diff, function (memo, change) {
+          var indicator = change.added ? '+' : change.removed ? '-' : '';
+          return memo + indicator + change.value + indicator;
+        }, '');
+      };
+
+      prompt.start(function (actionMessage) {
+        assert.deepEqual(actionMessage.action, Prompt.Actions.APPLY_CHANGES);
+        assert.deepEqual(actionMessage.payload, {
+          abortCommit: true,
+          suggestions: [
+            { file: 'foo.js', lineNumber: 1, newText: "AA BB AA", oldText: 'AA AA' },
+            { file: 'bar.js', lineNumber: 2, newText: "DDE", oldText: 'DD' }
+          ]
+        });
+        done();
+      });
+    });
   });
 });
