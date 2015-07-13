@@ -1,4 +1,6 @@
-# stylish-commit [![Build Status](https://travis-ci.org/electronifie/stylish-commit.svg)](https://travis-ci.org/electronifie/stylish-commit)
+# stylish-commit
+[![Build Status](https://travis-ci.org/electronifie/stylish-commit.svg)](https://travis-ci.org/electronifie/stylish-commit)
+[![npm](https://img.shields.io/npm/v/stylish-commit.svg)](https://www.npmjs.com/package/stylish-commit)
 
 stylish-commit is a command-line tool and git pre-commit hook that checks your changes using simple lint scripts
 written in javascript.
@@ -15,12 +17,16 @@ lines you will be prompted to change them, like:
 ![prompt with changes](http://f.cl.ly/items/1R303o1t1R2j3r2g0m0L/2015-07-07%20at%2010.55%20PM.png)
 
 Here, you have the option to:
- - **ignore the changes** - proceeds with the commit.
- - **apply the changes** - updates files with the recommended changes. This option takes you to
+ - **continue (ignores suggestions)** - proceeds with the commit without making any changes.
+ - **apply the suggestions** - updates files with the suggested changes. This option takes you to
    [another menu](http://f.cl.ly/items/373x3U3A2s1s090j0V0v/2015-07-07%20at%2010.56%20PM.png) with the
-   options to *apply and commit*, or *apply and cancel* the commit. This option will only be available if the
-   changes can be applied cleanly (i.e. there are no unstaged changes to the file).
- - **cancel the commit** - so you can manually make changes.
+   options to *apply suggestions and commit*, *apply suggestions and cancel commit*, *ignore suggestions
+   and cancel*, or *cancel (abort) the commit*.
+   This option will only be available if the changes can be applied cleanly
+   (i.e. there are no unstaged changes to the file).
+ - **select suggestions to apply** - lets you pick which suggestions are applied when you select the
+   option above.
+ - **cancel (abort) the commit** - so you can manually make changes.
 
 ## Installation
 
