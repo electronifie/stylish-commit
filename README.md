@@ -14,16 +14,14 @@ Use it for simple tasks like:
 
 When you commit some code, the style scripts will be run against all staged changes. If a script has modified
 lines you will be prompted to change them, like:
-![prompt with changes](http://f.cl.ly/items/1R303o1t1R2j3r2g0m0L/2015-07-07%20at%2010.55%20PM.png)
+![prompt with changes](http://f.cl.ly/items/1V2d08083x2G3P0n2n2Z/stylish-commit_lg.gif)
 
 Here, you have the option to:
  - **continue (ignores suggestions)** - proceeds with the commit without making any changes.
  - **apply the suggestions** - updates files with the suggested changes. This option takes you to
-   [another menu](http://f.cl.ly/items/373x3U3A2s1s090j0V0v/2015-07-07%20at%2010.56%20PM.png) with the
-   options to *apply suggestions and commit*, *apply suggestions and cancel commit*, *ignore suggestions
-   and cancel*, or *cancel (abort) the commit*.
-   This option will only be available if the changes can be applied cleanly
-   (i.e. there are no unstaged changes to the file).
+   another menu with the options to *apply suggestions and commit*, *apply suggestions and cancel commit*, 
+   *ignore suggestions and cancel*, or *cancel (abort) the commit*. This option will only be available if 
+   the changes can be applied cleanly (i.e. there are no unstaged changes to the file).
  - **select suggestions to apply** - lets you pick which suggestions are applied when you select the
    option above.
  - **cancel (abort) the commit** - so you can manually make changes.
