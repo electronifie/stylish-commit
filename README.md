@@ -61,6 +61,13 @@ and returns <code>['twas brillig and', 'the slithy', 'toves']`</code>.
 
 There are some scripts to get you started at https://github.com/electronifie/style-guide.
 
+### Testing style scripts
+
+You can test your scripts with the contents of a test file:
+ 1. create a test file e.g. ~/foo.txt
+ 2. ensure stylish-commit is globally installed with `npm install -g stylish-commit`
+ 3. run `stylish-commit -t ~/foo.txt` from within the repo configured to use your style scripts
+
 ### Alternative script formats
 
 #### Regex search + replace
